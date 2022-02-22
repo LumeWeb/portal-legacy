@@ -1,4 +1,6 @@
-# Skynet Portal
+# Lume Portal
+
+This portal software is a fork of https://github.com/SkynetLabs/skynet-webportal
 
 ## Web application
 
