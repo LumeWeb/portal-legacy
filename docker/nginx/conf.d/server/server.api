@@ -29,8 +29,12 @@ location / {
     set $skylink "0404dsjvti046fsua4ktor9grrpe76erq9jot9cvopbhsvsu76r4r30";
     set $path $uri;
     set $internal_no_limits "true";
+    set $content_hash $skylink;
+    set $content_hash_type "skylink";
 
+    include /etc/nginx/conf.d/include/location-options;
     include /etc/nginx/conf.d/include/location-skylink;
+    include /etc/nginx/conf.d/include/location-skylink-proxy;
 
     proxy_intercept_errors on;
     error_page 400 404 490 500 502 503 504 =200 @fallback;
@@ -330,8 +334,12 @@ location /skynet/resolve {
 location ~ "^/(([a-zA-Z0-9-_]{46}|[a-z0-9]{55})(/.*)?)$" {
     set $skylink $2;
     set $path $3;
+    set $content_hash $skylink;
+    set $content_hash_type "skylink";
 
+    include /etc/nginx/conf.d/include/location-options;
     include /etc/nginx/conf.d/include/location-skylink;
+    include /etc/nginx/conf.d/include/location-skylink-proxy;
 }
 
 location ~ "^/file/(([a-zA-Z0-9-_]{46}|[a-z0-9]{55})(/.*)?)$" {
@@ -339,8 +347,12 @@ location ~ "^/file/(([a-zA-Z0-9-_]{46}|[a-z0-9]{55})(/.*)?)$" {
     set $path $3;
     set $args attachment=true&$args;
     #set $is_args ?;
+    set $content_hash $skylink;
+    set $content_hash_type "skylink";
 
+    include /etc/nginx/conf.d/include/location-options;
     include /etc/nginx/conf.d/include/location-skylink;
+    include /etc/nginx/conf.d/include/location-skylink-proxy;
 }
 
 location /__internal/do/not/use/accounts {

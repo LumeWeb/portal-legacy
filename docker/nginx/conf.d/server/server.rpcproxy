@@ -1,0 +1,10 @@
+location ~ /pocketdns/? {
+    limit_except OPTIONS POST {
+        deny all;
+    }
+
+    include /etc/nginx/conf.d/include/cors;
+
+    rewrite ^.* / break;
+    proxy_pass http://rpcproxy;
+}

@@ -84,6 +84,7 @@ services:
       - handshake-api
       - dnslink-api
       - website
+      - ipfs
 
   website:
     build:
@@ -179,3 +180,16 @@ services:
       - 3100
     depends_on:
       - caddy
+
+  ipfs:
+    image:  ipfs/go-ipfs:latest
+    ports:
+      - 4001
+    expose:
+      - 8080
+    restart: unless-stopped
+    container_name: ipfs
+    logging: *default-logging
+    networks:
+      shared:
+        ipv4_address: 10.10.10.123

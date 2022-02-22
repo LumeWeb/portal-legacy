@@ -45,6 +45,16 @@ for i in $(seq 1 ${#PORTAL_MODULES}); do
   if [[ ${PORTAL_MODULES:i-1:1} == "u" ]]; then
     COMPOSE_FILES+=" -f docker-compose.mongodb.yml -f docker-compose.blocker.yml -f docker-compose.abuse.yml"
   fi
+
+  # dns module - alias "u"
+  if [[ ${PORTAL_MODULES:i-1:1} == "d" ]]; then
+    COMPOSE_FILES+=" -f docker-compose.rpcproxy.yml"
+  fi
+
+  # rpc module - alias "r"
+  if [[ ${PORTAL_MODULES:i-1:1} == "r" ]]; then
+    COMPOSE_FILES+=" -f docker-compose.rpcproxy.yml"
+  fi
 done
 
 # override file if exists

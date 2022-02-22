@@ -1,0 +1,8 @@
+access_by_lua_block {
+  ngx.log(ngx.ERR, 'ipfs')
+    if ngx.req.get_method() != 'GET' then
+        ngx.exit(405)
+    end
+}
+
+proxy_pass http://ipfs:8080/ipfs/$content_hash/$path$is_args$args;

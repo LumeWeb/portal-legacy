@@ -1,9 +1,4 @@
-include /etc/nginx/conf.d/include/cors;
-include /etc/nginx/conf.d/include/proxy-buffer;
-include /etc/nginx/conf.d/include/proxy-cache-downloads;
 include /etc/nginx/conf.d/include/track-download;
-
-limit_conn downloads_by_ip 100; # ddos protection: max 100 downloads at a time
 
 # ensure that skylink that we pass around is base64 encoded (transform base32 encoded ones)
 # this is important because we want only one format in cache keys and logs
@@ -25,12 +20,15 @@ set $skynet_proof '';
 set $limit_rate 0;
 
 access_by_lua_block {
+    if ngx.var.content_hash_type ~= 'skylink' then
+        return
+    end
     local httpc = require("resty.http").new()
 
     -- detect whether requested skylink is v2
     local isBase32v2 = string.len(ngx.var.skylink) == 55 and string.sub(ngx.var.skylink, 0, 2) == "04"
     local isBase64v2 = string.len(ngx.var.skylink) == 46 and string.sub(ngx.var.skylink, 0, 2) == "AQ"
-    
+
     if isBase32v2 or isBase64v2 then
         -- 10.10.10.10 points to sia service (alias not available when using resty-http)
         local res, err = httpc:request_uri("http://10.10.10.10:9980/skynet/resolve/" .. ngx.var.skylink_v2, {
@@ -77,6 +75,9 @@ access_by_lua_block {
 }
 
 header_filter_by_lua_block {
+    if ngx.var.content_hash_type ~= 'skylink' then
+        return
+    end
     ngx.header["Skynet-Portal-Api"] = os.getenv("SKYNET_PORTAL_API")
     ngx.header["Skynet-Server-Api"] = os.getenv("SKYNET_SERVER_API")
 
@@ -94,15 +95,3 @@ header_filter_by_lua_block {
         ngx.shared.nocache:set(ngx.var.skylink_v1, ngx.header["Content-Length"])
     end
 }
-
-limit_rate_after 512k;
-limit_rate $limit_rate;
-
-proxy_read_timeout 600;
-proxy_set_header User-Agent: Sia-Agent;
-
-# in case the requested skylink was v2 and we already resolved it to skylink v1, we are going to pass resolved 
-# skylink v1 to skyd to save that extra skylink v2 lookup in skyd but in turn, in case skyd returns a redirect 
-# we need to rewrite the skylink v1 to skylink v2 in the location header with proxy_redirect
-proxy_redirect $skylink_v1 $skylink_v2;
-proxy_pass http://sia:9980/skynet/skylink/$skylink_v1$path$is_args$args;

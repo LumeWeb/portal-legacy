@@ -1,0 +1,5 @@
+# in case the requested skylink was v2 and we already resolved it to skylink v1, we are going to pass resolved
+# skylink v1 to skyd to save that extra skylink v2 lookup in skyd but in turn, in case skyd returns a redirect
+# we need to rewrite the skylink v1 to skylink v2 in the location header with proxy_redirect
+proxy_redirect $skylink_v1 $skylink_v2;
+proxy_pass http://sia:9980/skynet/skylink/$skylink_v1$path$is_args$args;

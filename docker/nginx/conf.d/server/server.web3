@@ -3,8 +3,35 @@ include /etc/nginx/conf.d/include/init-optional-variables;
 location / {
     set $skylink "";
     set $path $uri;
+    set $content_hash_type "";
+    set $content_hash "";
+    set $proxy_url "";
 
     rewrite_by_lua_block {
+
+        if ngx.var.args == nil then
+            ngx.var.args = ''
+        end
+        if ngx.var.http_x_content_hash then
+            if ngx.var.http_x_content_hash_type == 'ipfs' or ngx.var.http_x_content_hash_type == 'ipns' then
+                ngx.var.content_hash_type = ngx.var.http_x_content_hash_type
+                ngx.var.content_hash = ngx.var.http_x_content_hash
+                if string.sub(ngx.var.path, -1) ~= "/" then
+                    ngx.var.path =  ngx.var.path .. "/"
+                end
+                ngx.var.proxy_url = 'http://10.10.10.123:8080/' .. ngx.var.content_hash_type .. '/' .. ngx.var.content_hash ..  ngx.var.path ..  ngx.var.is_args .. ngx.var.args
+                return
+            end
+
+            ngx.var.content_hash_type = 'skylink'
+            ngx.var.skylink = require("skynet.skylink").parse(ngx.var.http_x_content_hash)
+            ngx.var.skylink_v1 = ngx.var.skylink
+            ngx.var.skylink_v2 = ngx.var.skylink
+            ngx.var.content_hash = ngx.var.skylink_v1
+            ngx.var.proxy_url = 'http://sia:9980/skynet/skylink/' .. ngx.var.content_hash ..  ngx.var.path ..  ngx.var.is_args .. ngx.var.args
+            return
+        end
+
         local cache = ngx.shared.dnslink
         local cache_value = cache:get(ngx.var.host)
 
@@ -40,7 +67,14 @@ location / {
         ngx.var.skylink = require("skynet.skylink").parse(ngx.var.skylink)
         ngx.var.skylink_v1 = ngx.var.skylink
         ngx.var.skylink_v2 = ngx.var.skylink
+        ngx.var.content_hash = ngx.var.skylink_v1
+        ngx.var.proxy_url = 'http://sia:9980/skynet/skylink/' .. ngx.var.content_hash ..  ngx.var.path ..  ngx.var.is_args .. ngx.var.args
     }
 
+    include /etc/nginx/conf.d/include/location-options;
     include /etc/nginx/conf.d/include/location-skylink;
+
+    proxy_redirect $skylink_v1 $skylink_v2;
+
+    proxy_pass $proxy_url;
 }
