@@ -1,4 +1,4 @@
-FROM node:16.13.2-alpine
+FROM node:17.7.1-alpine
 
 RUN apk update && apk add dnsmasq
 
