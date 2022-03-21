@@ -7,38 +7,16 @@ x-logging: &default-logging
     max-file: "3"
 
 services:
-  pocket:
-    build:
-      context: ./docker/pocket
-      dockerfile: Dockerfile
-    restart: unless-stopped
-    environment:
-      - POCKET_ACCOUNT_PRIVATE_KEY=${POCKET_ACCOUNT_PRIVATE_KEY}
-    volumes:
-      - ./docker/data/pocket/.pocket:/root/.pocket
-    expose:
-      - 8081
-    ports:
-      - 26656
-    networks:
-      shared:
-        ipv4_address: 10.10.10.121
   rpcproxy:
-    build:
-      context: ./packages/rpcproxy
-      dockerfile: Dockerfile
+    image: lumeweb/rpcproxy
     restart: unless-stopped
     env_file:
       - .env
-    volumes:
-      - ./docker/data/rpcproxy:/data
     expose:
       - 8081
     ports:
       - "8081:80"
-      - "9229:9229"
     depends_on:
-      - pocket
       - handshake
     networks:
       shared:
@@ -46,4 +24,3 @@ services:
   nginx:
     depends_on:
       - rpcproxy
-      - pocket
