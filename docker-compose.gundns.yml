@@ -1,0 +1,27 @@
+version: "3.7"
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  gundns:
+    image: lumeweb/gundns
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - ./docker/data/gundns:/app
+    expose:
+      - 8081
+    depends_on:
+      - pocket
+      - handshake
+    networks:
+      shared:
+        ipv4_address: 10.10.10.123
+  nginx:
+    depends_on:
+      - rpcproxy
