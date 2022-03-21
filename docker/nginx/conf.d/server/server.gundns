@@ -1,0 +1,5 @@
+location /dns {
+    include /etc/nginx/conf.d/include/cors;
+
+    proxy_pass http://gundns;
+}
