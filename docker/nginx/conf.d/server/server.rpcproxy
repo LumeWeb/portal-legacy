@@ -1,4 +1,4 @@
-location ~ /pocketdns/? {
+location ~ /rpc/? {
     limit_except OPTIONS POST {
         deny all;
     }
