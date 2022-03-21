@@ -1,0 +1,31 @@
+version: "3.7"
+
+x-logging: &default-logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
+services:
+  pocket:
+    build:
+      context: ./docker/pocket
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      - POCKET_ACCOUNT_PRIVATE_KEY=${POCKET_ACCOUNT_PRIVATE_KEY}
+    volumes:
+      - ./docker/data/pocket/.pocket:/root/.pocket
+    expose:
+      - 8081
+    ports:
+      - 26656
+    networks:
+      shared:
+        ipv4_address: 10.10.10.121
+  nginx:
+    depends_on:
+      - pocket
+  rpcproxy:
+    depends_on:
+      - pocket
