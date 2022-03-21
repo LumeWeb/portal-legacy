@@ -46,14 +46,19 @@ for i in $(seq 1 ${#PORTAL_MODULES}); do
     COMPOSE_FILES+=" -f docker-compose.mongodb.yml -f docker-compose.blocker.yml -f docker-compose.abuse.yml"
   fi
 
-  # dns module - alias "u"
+  # dns module - alias "d"
   if [[ ${PORTAL_MODULES:i-1:1} == "d" ]]; then
-    COMPOSE_FILES+=" -f docker-compose.rpcproxy.yml"
+    COMPOSE_FILES+=" -f docker-compose.gundns.yml -f docker-compose.rpcproxy.yml"
   fi
 
   # rpc module - alias "r"
   if [[ ${PORTAL_MODULES:i-1:1} == "r" ]]; then
     COMPOSE_FILES+=" -f docker-compose.rpcproxy.yml"
+  fi
+
+  # pocket node module - alias "r"
+  if [[ ${PORTAL_MODULES:i-1:1} == "p" ]]; then
+    COMPOSE_FILES+=" -f docker-compose.pocket.yml"
   fi
 done
 
