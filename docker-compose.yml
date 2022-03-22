@@ -183,8 +183,6 @@ services:
 
   ipfs:
     image:  ipfs/go-ipfs:latest
-    ports:
-      - 4001
     expose:
       - 8080
     restart: unless-stopped
