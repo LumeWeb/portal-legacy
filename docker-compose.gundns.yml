@@ -13,8 +13,8 @@ services:
     env_file:
       - .env
     environment:
-      - RPC_PROXY_HOST="rpcproxy"
-      - RPC_PROXY_PORT="80"
+      - RPC_PROXY_HOST=rpcproxy
+      - RPC_PROXY_PORT=80
     volumes:
       - ./docker/data/gundns/data:/app/data
     expose:
