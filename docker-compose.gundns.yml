@@ -16,7 +16,7 @@ services:
       - RPC_PROXY_HOST="rpcproxy"
       - RPC_PROXY_PORT="80"
     volumes:
-      - ./docker/data/gundns/auth.json:/app/auth.json
+      - ./docker/data/gundns/data:/app/data
     expose:
       - 8081
     networks:
