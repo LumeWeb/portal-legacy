@@ -1,5 +1,7 @@
 location /dns {
     include /etc/nginx/conf.d/include/cors;
 
-    proxy_pass http://gundns;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection "Upgrade";
+    proxy_pass http://gundns:8081;
 }
