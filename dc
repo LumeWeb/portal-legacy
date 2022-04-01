@@ -56,7 +56,7 @@ for i in $(seq 1 ${#PORTAL_MODULES}); do
     COMPOSE_FILES+=" -f docker-compose.rpcproxy.yml"
   fi
 
-  # pocket node module - alias "r"
+  # pocket node module - alias "p"
   if [[ ${PORTAL_MODULES:i-1:1} == "p" ]]; then
     COMPOSE_FILES+=" -f docker-compose.pocket.yml"
   fi
