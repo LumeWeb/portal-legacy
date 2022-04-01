@@ -1,4 +1,4 @@
-FROM openresty/openresty:1.19.9.1-bionic
+FROM openresty/openresty:1.19.9.1-focal
 
 RUN luarocks install lua-resty-http && \
     luarocks install hasher && \
@@ -18,5 +18,6 @@ CMD [ "bash", "-c", \
        ./mo < /etc/nginx/conf.d.templates/server.api.conf > /etc/nginx/conf.d/server.api.conf; \
        ./mo < /etc/nginx/conf.d.templates/server.hns.conf > /etc/nginx/conf.d/server.hns.conf; \
        ./mo < /etc/nginx/conf.d.templates/server.skylink.conf > /etc/nginx/conf.d/server.skylink.conf ; \
+       while :; do sleep 6h & wait ${!}; /usr/local/openresty/bin/openresty -s reload; done & \
        /usr/local/openresty/bin/openresty '-g daemon off;'" \
     ]

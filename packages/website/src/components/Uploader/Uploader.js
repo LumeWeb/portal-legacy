@@ -22,11 +22,11 @@ const getRootDirectory = (file) => {
 };
 
 const RegistrationLink = () => {
-  const accountsUrl = useAccountsUrl();
+  const createAccountsUrl = useAccountsUrl();
 
   return (
     <Link
-      href={`${accountsUrl}/auth/registration`}
+      href={createAccountsUrl("auth/registration")}
       className="uppercase underline-primary hover:text-primary transition-colors duration-200"
     >
       Sign up
@@ -35,14 +35,27 @@ const RegistrationLink = () => {
 };
 
 const LogInLink = () => {
-  const accountsUrl = useAccountsUrl();
+  const createAccountsUrl = useAccountsUrl();
 
   return (
     <Link
-      href={`${accountsUrl}/auth/login`}
+      href={createAccountsUrl("auth/login")}
       className="uppercase underline-primary hover:text-primary transition-colors duration-200"
     >
       Log in
+    </Link>
+  );
+};
+
+const SubscribeLink = () => {
+  const createAccountsUrl = useAccountsUrl();
+
+  return (
+    <Link
+      href={createAccountsUrl("payments")}
+      className="uppercase underline-primary hover:text-primary transition-colors duration-200"
+    >
+      available plans
     </Link>
   );
 };
@@ -52,10 +65,19 @@ const Uploader = () => {
   const [uploads, setUploads] = React.useState([]);
 
   const { data: accounts } = useAccounts();
-  const showAccountFeatures =
-    accounts && accounts.enabled !== false && !accounts?.auth_required && !accounts?.authenticated;
-  const disabledComponent =
-    accounts && accounts.enabled !== false && accounts?.auth_required && !accounts?.authenticated;
+
+  // variables extracted from useAccounts response
+  const isAccountsEnabled = accounts?.enabled;
+  const isSubscriptionRequired = accounts?.subscription_required;
+  const isAuthRequired = isSubscriptionRequired || accounts?.auth_required;
+  const isAuthenticated = accounts?.authenticated;
+  const hasSubscription = accounts?.subscription;
+
+  // derive current app state and extract it into variables
+  const showAccountFeatures = isAccountsEnabled && !isAuthRequired && !isAuthenticated;
+  const showAuthenticationRequired = isAccountsEnabled && isAuthRequired && !isAuthenticated;
+  const showSubscriptionRequired = isAccountsEnabled && isAuthenticated && isSubscriptionRequired && !hasSubscription;
+  const isComponentDisabled = showAuthenticationRequired || showSubscriptionRequired;
 
   const onUploadStateChange = React.useCallback((id, state) => {
     setUploads((uploads) => {
@@ -91,7 +113,10 @@ const Uploader = () => {
     }
   }, [uploads]);
 
-  const { getRootProps, getInputProps, isDragActive, inputRef } = useDropzone({ onDrop: handleDrop });
+  const { getRootProps, getInputProps, isDragActive, inputRef } = useDropzone({
+    onDrop: handleDrop,
+    useFsAccessApi: false,
+  });
   const inputElement = inputRef.current;
 
   React.useEffect(() => {
@@ -101,7 +126,7 @@ const Uploader = () => {
   }, [inputElement, mode]);
 
   return (
-    <div className={classnames("relative", { "p-8": disabledComponent })}>
+    <div className={classnames("relative", { "p-8": isComponentDisabled })}>
       <div className="max-w-content mx-auto rounded-lg shadow bg-white z-0 relative">
         <div className="flex">
           <button
@@ -153,7 +178,7 @@ const Uploader = () => {
               {mode === "directory" && <span>Drop any folder with an index.html file to deploy to Skynet</span>}
             </h4>
           </div>
-          {!disabledComponent && (
+          {!isComponentDisabled && (
             <div className="absolute left-1/2 -bottom-4 desktop:-bottom-8">
               <div className="relative -left-1/2 transform transition-transform hover:rotate-180" role="button">
                 <Add />
@@ -164,9 +189,11 @@ const Uploader = () => {
 
         {uploads.length > 0 && (
           <div className="flex flex-col space-y-5 px-4 py-10 desktop:p-14">
-            {uploads.map((upload) => (
-              <UploaderElement key={upload.id} onUploadStateChange={onUploadStateChange} upload={upload} />
-            ))}
+            <div className="home-uploaded-files">
+              {uploads.map((upload) => (
+                <UploaderElement key={upload.id} onUploadStateChange={onUploadStateChange} upload={upload} />
+              ))}
+            </div>
 
             {showAccountFeatures && (
               <div className="z-0 relative flex flex-col items-center space-y-1 pt-8">
@@ -194,17 +221,29 @@ const Uploader = () => {
         <div className="z-0 relative flex flex-col items-center space-y-1 mt-10">
           <Unlock />
           <p className="text-sm font-light text-palette-600">
-            <RegistrationLink /> for free and unlock features
+            <RegistrationLink /> and unlock features
           </p>
         </div>
       )}
 
-      {disabledComponent && (
+      {showAuthenticationRequired && (
         <div className="absolute inset-0 bg-palette-500 bg-opacity-90 rounded-lg">
           <div className="flex h-full">
             <div className="m-auto">
               <h4 className="font-light text-palette-100 text-lg mt-2 text-center">
-                <LogInLink /> or <RegistrationLink /> for free
+                <LogInLink /> or <RegistrationLink />
+              </h4>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showSubscriptionRequired && (
+        <div className="absolute inset-0 bg-palette-500 bg-opacity-90 rounded-lg">
+          <div className="flex h-full">
+            <div className="m-auto">
+              <h4 className="font-light text-palette-100 text-lg mt-2 text-center">
+                Active subscription required - <SubscribeLink />
               </h4>
             </div>
           </div>

@@ -27,7 +27,7 @@ if len(sys.argv) > 2:
     CONTAINER_NAME = sys.argv[2]
 
 # sc_precision is the number of hastings per siacoin
-sc_precision = 10 ** 24
+sc_precision = 10**24
 
 # Environment variable globals
 setup_done = False
@@ -52,6 +52,9 @@ api_endpoint = "http://{}:{}".format(
 
 # find siad api password by getting it out of the docker container
 def get_api_password():
+    if os.getenv("SIA_API_PASSWORD"):
+        return os.getenv("SIA_API_PASSWORD")
+
     api_password_regex = re.compile(r"^\w+$")
     docker_cmd = "docker exec {} cat /sia-data/apipassword".format(CONTAINER_NAME)
     output = subprocess.check_output(docker_cmd, shell=True).decode("utf-8")
@@ -75,7 +78,7 @@ async def send_msg(msg, force_notify=False, file=None):
         webhook = DiscordWebhook(url=webhook_url, rate_limit_retry=True)
 
         # Add the portal name.
-        msg = "**{}**: {}".format(os.getenv("SKYNET_SERVER_API"), msg)
+        msg = "**{}**: {}".format(os.getenv("SERVER_DOMAIN"), msg)
 
         if file and isinstance(file, str):
             is_json = is_json_string(file)

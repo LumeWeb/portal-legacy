@@ -1,8 +1,20 @@
 # Skynet Portal Setup Scripts
 
+> :warning: This documentation is outdated and should be used for reference
+only. Portal setup documentation is located at
+https://docs.siasky.net/webportal-management/overview.
+
 This directory contains a setup guide and scripts that will install and
 configure some basic requirements for running a Skynet Portal. The assumption is
 that we are working with a Debian Buster Minimal system or similar.
+
+## Latest Setup Documentation
+
+Latest Skynet Webportal setup documentation and the setup process Skynet Labs
+supports is located at https://docs.siasky.net/webportal-management/overview.
+
+Some of the scripts and setup documentation contained in this repository
+(`skynet-webportal`) can be outdated and generally should not be used.
 
 ## Initial Setup
 
@@ -90,7 +102,6 @@ At this point we have almost everything running, we just need to set up your wal
    - `CLOUDFLARE_AUTH_TOKEN` (optional) if using cloudflare as dns loadbalancer (need to change it in Caddyfile too)
    - `AWS_ACCESS_KEY_ID` (optional) if using route53 as a dns loadbalancer
    - `AWS_SECRET_ACCESS_KEY` (optional) if using route53 as a dns loadbalancer
-   - `PORTAL_NAME` a string representing name of your portal e.g. `siasky.xyz` or `my skynet portal`
    - `DISCORD_WEBHOOK_URL` (required if using Discord notifications) discord webhook url (generate from discord app)
    - `DISCORD_MENTION_USER_ID` (optional) add `/cc @user` mention to important messages from webhook (has to be id not user name)
    - `DISCORD_MENTION_ROLE_ID` (optional) add `/cc @role` mention to important messages from webhook (has to be id not role name)
