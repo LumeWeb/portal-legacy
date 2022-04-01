@@ -14,8 +14,6 @@ services:
       - .env
     expose:
       - 8081
-    ports:
-      - "8081:80"
     depends_on:
       - handshake
     networks:
