@@ -71,7 +71,6 @@ location / {
         ngx.var.proxy_url = 'http://sia:9980/skynet/skylink/' .. ngx.var.content_hash ..  ngx.var.path ..  ngx.var.is_args .. ngx.var.args
     }
 
-    include /etc/nginx/conf.d/include/location-options;
     include /etc/nginx/conf.d/include/location-skylink;
 
     proxy_redirect $skylink_v1 $skylink_v2;

@@ -15,7 +15,6 @@ location / {
         return string.gsub(ngx.var.request_uri, "?.*", "")
     }
 
-    include /etc/nginx/conf.d/include/location-options;
     include /etc/nginx/conf.d/include/location-skylink;
     include /etc/nginx/conf.d/include/location-skylink-proxy;
 }
