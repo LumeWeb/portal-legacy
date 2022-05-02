@@ -3,5 +3,5 @@ location /dns {
 
     proxy_set_header Upgrade $http_upgrade;
     proxy_set_header Connection "Upgrade";
-    proxy_pass http://gundns:8081;
+    proxy_pass http://gundns;
 }

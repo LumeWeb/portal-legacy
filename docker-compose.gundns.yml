@@ -18,7 +18,7 @@ services:
     volumes:
       - ./docker/data/gundns/data:/app/data
     expose:
-      - 8081
+      - 80
     networks:
       shared:
         ipv4_address: 10.10.10.124
