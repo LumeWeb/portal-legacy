@@ -57,7 +57,8 @@ services:
   nginx:
     # uncomment "build" and comment out "image" to build from sources
     build:
-      dockerfile: ./docker/nginx/Dockerfile
+      context: ./docker/nginx
+      dockerfile: Dockerfile
     container_name: nginx
     restart: unless-stopped
     logging: *default-logging
