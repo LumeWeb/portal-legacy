@@ -8,7 +8,7 @@ x-logging: &default-logging
 
 services:
   gundns:
-    image: lumeweb/gundns:master
+    image: lumeweb/gundns:latest
     restart: unless-stopped
     env_file:
       - .env
