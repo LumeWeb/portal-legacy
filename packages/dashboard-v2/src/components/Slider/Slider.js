@@ -40,7 +40,8 @@ const Slider = ({ slides, breakpoints, scrollerClassName, className }) => {
   );
 
   React.useEffect(() => {
-    const maxIndex = slides.length - visibleSlides;
+    // Prevent negative values for activeIndex.
+    const maxIndex = Math.max(slides.length - visibleSlides, 0);
 
     // Make sure to not scroll too far when screen size changes.
     if (activeIndex > maxIndex) {
@@ -61,7 +62,7 @@ const Slider = ({ slides, breakpoints, scrollerClassName, className }) => {
           const isVisible = index >= activeIndex && index < activeIndex + visibleSlides;
 
           return (
-            <div key={`slide-${index}`}>
+            <div key={`slide-${index}`} className="h-full">
               <Slide
                 isVisible={isVisible || !scrollable}
                 onClickCapture={

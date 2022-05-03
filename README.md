@@ -5,10 +5,10 @@ This portal software is a fork of https://github.com/SkynetLabs/skynet-webportal
 ## Latest Setup Documentation
 
 Latest Skynet Webportal setup documentation and the setup process Skynet Labs
-supports is located at https://docs.siasky.net/webportal-management/overview.
+supports is located at https://portal-docs.skynetlabs.com/.
 
-Some of the scripts and setup documentation contained in this repository
-(`skynet-webportal`) can be outdated and generally should not be used.
+Some scripts and setup documentation contained in this repository
+(`skynet-webportal`) may be outdated and generally should not be used.
 
 ## Web application
 
@@ -37,7 +37,7 @@ For the purposes of complying with our code license, you can use the following S
 `fb6c9320bc7e01fbb9cd8d8c3caaa371386928793c736837832e634aaaa484650a3177d6714a`
 
 ## Running a Portal
-For those interested in running a Webportal, head over to our developer docs [here](https://docs.siasky.net/webportal-management/overview.) to learn more.
+For those interested in running a Webportal, head over to our developer docs [here](https://portal-docs.skynetlabs.com/) to learn more.
 
 ## Contributing
 

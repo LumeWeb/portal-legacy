@@ -1,5 +1,4 @@
 include /etc/nginx/conf.d/include/cors;
-include /etc/nginx/conf.d/include/track-download;
 
 limit_conn downloads_by_ip 100; # ddos protection: max 100 downloads at a time
 
@@ -9,13 +8,13 @@ set_by_lua_block $skylink { return require("skynet.skylink").parse(ngx.var.skyli
 
 # $skylink_v1 and $skylink_v2 variables default to the same value but in case the requested skylink was:
 # a) skylink v1 - it would not matter, no additional logic is executed
-# b) skylink v2 - in a lua block below we will resolve the skylink v2 into skylink v1 and update 
-#      $skylink_v1 variable so then the proxy request to skyd can be cached in nginx (proxy_cache_key 
+# b) skylink v2 - in a lua block below we will resolve the skylink v2 into skylink v1 and update
+#      $skylink_v1 variable so then the proxy request to skyd can be cached in nginx (proxy_cache_key
 #      in proxy-cache-downloads includes $skylink_v1 as a part of the cache key)
 set $skylink_v1 $skylink;
 set $skylink_v2 $skylink;
 
-# variable for Skynet-Proof header that we need to inject 
+# variable for Skynet-Proof header that we need to inject
 # into a response if the request was for skylink v2
 set $skynet_proof '';
 
@@ -47,3 +46,20 @@ limit_rate $limit_rate;
 
 proxy_read_timeout 600;
 proxy_set_header User-Agent: Sia-Agent;
+
+proxy_pass http://sia:9980/skynet/skylink/$skylink$path$is_args$args;
+
+log_by_lua_block {
+    local skynet_account = require("skynet.account")
+    local skynet_modules = require("skynet.modules")
+    local skynet_scanner = require("skynet.scanner")
+    local skynet_tracker = require("skynet.tracker")
+
+    if skynet_modules.is_enabled("a") then
+        skynet_tracker.track_download(ngx.header["Skynet-Skylink"], ngx.status, skynet_account.get_auth_headers(), ngx.var.body_bytes_sent)
+    end
+
+    if skynet_modules.is_enabled("s") then
+        skynet_scanner.scan_skylink(ngx.header["Skynet-Skylink"])
+    end
+}
