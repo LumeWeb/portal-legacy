@@ -1,5 +1,5 @@
 # builder stage - use debian base image to avoid needing to install missing packages
-FROM node:16.14.2-bullseye as builder
+FROM node:18.0.0-bullseye as builder
 
 WORKDIR /usr/app
 
@@ -23,7 +23,7 @@ COPY packages/website/gatsby-*.js \
 RUN yarn build
 
 # main stage - use alpine base image to minimise the resulting image footprint
-FROM node:16.14.2-alpine
+FROM node:18.0.0-bullseye
 
 WORKDIR /usr/app
 
