@@ -47,8 +47,6 @@ limit_rate $limit_rate;
 proxy_read_timeout 600;
 proxy_set_header User-Agent: Sia-Agent;
 
-proxy_pass http://sia:9980/skynet/skylink/$skylink$path$is_args$args;
-
 log_by_lua_block {
     local skynet_account = require("skynet.account")
     local skynet_modules = require("skynet.modules")
