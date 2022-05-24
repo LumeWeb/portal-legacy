@@ -8,12 +8,12 @@ x-logging: &default-logging
 
 services:
   rpcproxy:
-    image: lumeweb/rpcproxy:master
+    image: lumeweb/rpcproxy:latest
     restart: unless-stopped
     env_file:
       - .env
     expose:
-      - 8081
+      - 80
     depends_on:
       - handshake
     networks:
