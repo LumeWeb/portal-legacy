@@ -65,7 +65,7 @@ location / {
                  end
 
                 local cache_ttl = 300 -- 5 minutes cache expire time
-                cache:set(ngx.var.host, ngx.var.skylink, cache_ttl)
+                cache:set(ngx.var.host, res.body, cache_ttl)
             end
         else
             local resolved = cjson.decode(cache_value)
