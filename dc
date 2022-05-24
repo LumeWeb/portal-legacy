@@ -54,17 +54,17 @@ done
 
 for i in $(seq 1 ${#LUME_MODULES}); do
   # pocket node module - alias "p"
-  if [[ ${PORTAL_MODULES:i-1:1} == "p" ]]; then
+  if [[ ${LUME_MODULES:i-1:1} == "p" ]]; then
     COMPOSE_FILES+=" -f docker-compose.pocket.yml"
   fi
 
   # dns module - alias "d"
-  if [[ ${PORTAL_MODULES:i-1:1} == "d" ]]; then
+  if [[ ${LUME_MODULES:i-1:1} == "d" ]]; then
     COMPOSE_FILES+=" -f docker-compose.gundns.yml -f docker-compose.rpcproxy.yml"
   fi
 
   # rpc module - alias "r"
-  if [[ ${PORTAL_MODULES:i-1:1} == "r" ]]; then
+  if [[ ${LUME_MODULES:i-1:1} == "r" ]]; then
     COMPOSE_FILES+=" -f docker-compose.rpcproxy.yml"
   fi
 done
