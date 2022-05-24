@@ -74,4 +74,4 @@ if [[ -f docker-compose.override.yml ]]; then
   COMPOSE_FILES+=" -f docker-compose.override.yml"
 fi
 
-docker-compose $COMPOSE_FILES $@
+docker compose $COMPOSE_FILES $@
