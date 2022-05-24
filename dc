@@ -46,6 +46,18 @@ for i in $(seq 1 ${#PORTAL_MODULES}); do
     COMPOSE_FILES+=" -f docker-compose.mongodb.yml -f docker-compose.blocker.yml -f docker-compose.abuse-scanner.yml"
   fi
 
+  # pinner module - alias "p"
+  if [[ ${PORTAL_MODULES:i-1:1} == "p" ]]; then
+    COMPOSE_FILES+=" -f docker-compose.mongodb.yml -f docker-compose.pinner.yml"
+  fi
+done
+
+for i in $(seq 1 ${#LUME_MODULES}); do
+  # pocket node module - alias "p"
+  if [[ ${PORTAL_MODULES:i-1:1} == "p" ]]; then
+    COMPOSE_FILES+=" -f docker-compose.pocket.yml"
+  fi
+
   # dns module - alias "d"
   if [[ ${PORTAL_MODULES:i-1:1} == "d" ]]; then
     COMPOSE_FILES+=" -f docker-compose.gundns.yml -f docker-compose.rpcproxy.yml"
@@ -54,16 +66,6 @@ for i in $(seq 1 ${#PORTAL_MODULES}); do
   # rpc module - alias "r"
   if [[ ${PORTAL_MODULES:i-1:1} == "r" ]]; then
     COMPOSE_FILES+=" -f docker-compose.rpcproxy.yml"
-  fi
-
-  # pocket node module - alias "p"
-  if [[ ${PORTAL_MODULES:i-1:1} == "p" ]]; then
-    COMPOSE_FILES+=" -f docker-compose.pocket.yml"
-  fi
-
-  # pinner module - alias "p"
-  if [[ ${PORTAL_MODULES:i-1:1} == "p" ]]; then
-    COMPOSE_FILES+=" -f docker-compose.mongodb.yml -f docker-compose.pinner.yml"
   fi
 done
 
