@@ -1,4 +1,4 @@
-FROM node:18.1.0-alpine
+FROM node:19.3.0-alpine
 
 RUN apk add --no-cache build-base~=0.5 python3~=3.9
 
